@@ -1,0 +1,59 @@
+{% extends 'inventario/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+
+<section class="py-5">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {% for producto in productos %}
+          <div class="col">
+            <div class="product-item">
+              <figure>
+                {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombreProducto }}" class="img-fluid">
+                {% else %}
+                <img src="{% static 'images/default-product.png' %}" alt="{{ producto.nombreProducto }}" class="img-fluid">
+                {% endif %}
+              </figure>
+              
+              <h3>{{ producto.nombreProducto }}</h3>
+              <span class="qty">{{ producto.idCategoria }}</span>
+              <span class="price">${{ producto.precioVenta }}</span>
+              
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="input-group product-qty">
+                  <span class="input-group-btn">
+                    <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus">
+                      <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
+                    </button>
+                  </span>
+                  <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1">
+                  <span class="input-group-btn">
+                    <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus">
+                      <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
+                    </button>
+                  </span>
+                </div>
+                <a href="#" class="nav-link">
+                  Agregar al carrito 
+                  <svg width="16" height="16"><use xlink:href="#cart"></use></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          {% empty %}
+          <div class="col-12">
+            <div class="alert alert-info">No hay productos disponibles</div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
