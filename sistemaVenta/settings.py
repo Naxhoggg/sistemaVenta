@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -117,6 +118,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -126,3 +130,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Al final del archivo
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Firebase configuration
+FIREBASE_CONFIG = {
+    'apiKey': "AIzaSyC2Y7Z7FtJo_CZcW5bIZcPw2NqViSSocyew",  # API key actualizada
+    'authDomain': "sistemaventa-django.firebaseapp.com",
+    'projectId': "sistemaventa-django",
+    'storageBucket': "sistemaventa-django.firebasestorage.app",
+    'messagingSenderId': "754710008908",
+    'appId': "1:754710008908:web:83a4b0492bf5162e6f50e9"
+}
+
+LOGIN_URL = 'inventario:iniciar_sesion'  # Asegúrate de que esta URL esté definida
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 86400  # 24 horas en segundos
+SESSION_SAVE_EVERY_REQUEST = True
+

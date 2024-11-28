@@ -16,9 +16,13 @@
                 {% for venta in ventas %}
                     <tr>
                         <td>{{ venta.id }}</td>
-                        <td>{{ venta.fechaVenta }}</td>
+                        <td>{{ venta.fechaVenta|date:"d/m/Y H:i" }}</td>
                         <td>{{ venta.metodoPago }}</td>
                         <td>${{ venta.montoPagado }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No hay ventas registradas</td>
                     </tr>
                 {% endfor %}
             </tbody>
