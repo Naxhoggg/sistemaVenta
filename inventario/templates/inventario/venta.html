@@ -1,173 +1,229 @@
-{% extends 'inventario/base.html' %}
-
-{% block content %}
+{% extends 'inventario/base.html' %} {% block content %}
 <section class="py-5">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-lg-12 mb-4">
-          <div class="d-flex justify-content-between align-items-center">
-            <h2 class="display-6">Registro de Venta</h2>
-          </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 mb-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2 class="display-6">Registro de Venta</h2>
         </div>
-  
-        <!-- Grid de Productos -->
-        <div class="col-lg-8">
-          <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-            {% for producto in productos %}
-            <div class="col">
-              <div class="product-item" data-producto-id="{{ producto.id }}">
-                <figure>
-                  {% if producto.imagen %}
-                  <img src="{{ producto.imagen.url }}" alt="{{ producto.nombreProducto }}" class="img-fluid">
-                  {% endif %}
-                </figure>
-                <h3>{{ producto.nombreProducto }}</h3>
-                <span class="qty">Stock: {{ producto.stockActual }}</span>
-                <span class="price">${{ producto.precioVenta }}</span>
-                <div class="d-flex align-items-center justify-content-between mt-3">
-                    <div class="input-group product-qty me-2" style="width: 100px;">
-                        <button type="button" class="quantity-left-minus btn btn-danger btn-number">
-                            <svg width="16" height="16"><use xlink:href="#minus"></use></svg>
-                        </button>
-                        <input type="text" class="form-control input-number" value="1" min="1" readonly>
-                        <button type="button" class="quantity-right-plus btn btn-success btn-number">
-                            <svg width="16" height="16"><use xlink:href="#plus"></use></svg>
-                        </button>
-                    </div>
-                  <button class="btn btn-primary" onclick="agregarProducto({{ producto.id }})">
-                    <svg width="16" height="16"><use xlink:href="#cart"></use></svg>
-                    Agregar
+      </div>
+
+      <!-- Grid de Productos -->
+      <div class="col-lg-8">
+        <div
+          class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4"
+        >
+          {% for producto in productos %}
+          <div class="col">
+            <div class="product-item" data-producto-id="{{ producto.id }}">
+              <figure>
+                {% if producto.imagen_url %}
+                <img
+                  src="{{ producto.imagen_url }}"
+                  alt="{{ producto.nombreProducto }}"
+                  class="img-fluid"
+                />
+                {% else %}
+                <span>Sin imagen</span>
+                {% endif %}
+              </figure>
+              <h3>{{ producto.nombreProducto }}</h3>
+              <span class="qty">Stock: {{ producto.stockActual }}</span>
+              <span class="price">${{ producto.precioVenta }}</span>
+              <div
+                class="d-flex align-items-center justify-content-between mt-3"
+              >
+                <div class="input-group product-qty me-2" style="width: 100px">
+                  <button
+                    type="button"
+                    class="quantity-left-minus btn btn-danger btn-number"
+                  >
+                    <svg width="16" height="16">
+                      <use xlink:href="#minus"></use>
+                    </svg>
+                  </button>
+                  <input
+                    type="text"
+                    class="form-control input-number"
+                    value="1"
+                    min="1"
+                    readonly
+                  />
+                  <button
+                    type="button"
+                    class="quantity-right-plus btn btn-success btn-number"
+                  >
+                    <svg width="16" height="16">
+                      <use xlink:href="#plus"></use>
+                    </svg>
                   </button>
                 </div>
+                <button
+                  class="btn btn-primary"
+                  onclick="agregarProducto('{{ producto.id }}')"
+                >
+                  <svg width="16" height="16">
+                    <use xlink:href="#cart"></use>
+                  </svg>
+                  Agregar
+                </button>
               </div>
             </div>
-            {% endfor %}
           </div>
+          {% endfor %}
         </div>
-  
-        <!-- Carrito -->
-        <div class="col-lg-4">
-          <div class="cart p-4 bg-white shadow-sm rounded">
-            <h3 class="mb-4 fs-5">Carrito de Compras</h3>
-            <div id="items-carrito" style="max-height: 400px; overflow-y: auto;"></div>
-            <div class="total mt-4">
-              <div class="d-flex justify-content-between align-items-center border-top pt-4">
-                <h4 class="mb-0 fs-6">Total:</h4>
-                <h4 class="mb-0 fs-6">$<span id="total">0.00</span></h4>
-              </div>
-              <button class="btn btn-primary w-100 mt-4 btn-finalizar">
-                Finalizar Venta
-              </button>
+      </div>
+
+      <!-- Carrito -->
+      <div class="col-lg-4">
+        <div class="cart p-4 bg-white shadow-sm rounded">
+          <h3 class="mb-4 fs-5">Carrito de Compras</h3>
+          <div
+            id="items-carrito"
+            style="max-height: 400px; overflow-y: auto"
+          ></div>
+          <div class="total mt-4">
+            <div class="metodo-pago mb-3">
+              <h4 class="fs-6 mb-2">Método de Pago:</h4>
+              <select class="form-select" id="metodoPago">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta Débito/Crédito</option>
+              </select>
             </div>
+            <div
+              class="d-flex justify-content-between align-items-center border-top pt-4"
+            >
+              <h4 class="mb-0 fs-6">Total:</h4>
+              <h4 class="mb-0 fs-6">$<span id="total">0.00</span></h4>
+            </div>
+            <button class="btn btn-primary w-100 mt-4 btn-finalizar">
+              Finalizar Venta
+            </button>
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>
 
 <!-- Estilos -->
 <style>
-    .venta-container {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 20px;
-        padding: 20px;
-    }
+  .venta-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
 
-    .carrito {
-        background: #f5f5f5;
-        padding: 20px;
-        border-radius: 8px;
-    }
+  .carrito {
+    background: #f5f5f5;
+    padding: 20px;
+    border-radius: 8px;
+  }
 
-    .add-btn {
-        background: #28a745;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 3px;
-        cursor: pointer;
-    }
+  .add-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
 
-    .btn-finalizar {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 100%;
-        margin-top: 15px;
-    }
+  .btn-finalizar {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+  }
 
-    .item-carrito {
-        margin-bottom: 5px;
-    }
+  .item-carrito {
+    margin-bottom: 5px;
+  }
 
-    .cart {
-        position: sticky;
-        top: 20px;
-    }
-    #items-carrito::-webkit-scrollbar {
-        width: 6px;
-    }
-    #items-carrito::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    #items-carrito::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 3px;
-    }
+  .cart {
+    position: sticky;
+    top: 20px;
+  }
+  #items-carrito::-webkit-scrollbar {
+    width: 6px;
+  }
+  #items-carrito::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  #items-carrito::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+  }
 
-    .product-item .btn-number {
-        width: 26px;
-        height: 26px;
-        line-height: 1;
-        text-align: center;
-        background: #FFFFFF;
-        border: 1px solid #E2E2E2;
-        border-radius: 6px;
-        color: #222;
-        padding: 0;
-    }
+  .product-item .btn-number {
+    width: 26px;
+    height: 26px;
+    line-height: 1;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e2e2;
+    border-radius: 6px;
+    color: #222;
+    padding: 0;
+  }
 </style>
 
 <!-- Scripts -->
 <script>
-    let carrito = [];
+  let carrito = [];
 
-    function agregarProducto(id) {
-        const productoCard = document.querySelector(`[data-producto-id="${id}"]`);
-        const nombre = productoCard.querySelector("h3").textContent;
-        const precio = parseFloat(
-            productoCard
-                .querySelector(".price")
-                .textContent.replace("$", "")
-        );
-        const cantidad = parseInt(productoCard.querySelector('.input-number').value);
+  function agregarProducto(id) {
+    console.log("ID del producto:", id);
+    const productoCard = document.querySelector(`[data-producto-id="${id}"]`);
+    console.log("Producto encontrado:", productoCard);
 
-        carrito.push({
-            id: id,
-            nombreProducto: nombre,
-            precioVenta: precio,
-            cantidad: cantidad
-        });
-
-        actualizarCarrito();
-        alert('Producto agregado al carrito');
+    if (!productoCard) {
+      console.error("No se encontró el producto con ID:", id);
+      return;
     }
 
-    function actualizarCarrito() {
-        const itemsCarrito = document.getElementById("items-carrito");
-        const totalSpan = document.getElementById("total");
-        let total = 0;
+    const nombre = productoCard.querySelector("h3").textContent;
+    const precio = parseFloat(
+      productoCard.querySelector(".price").textContent.replace("$", "")
+    );
+    const cantidad = parseInt(
+      productoCard.querySelector(".input-number").value
+    );
 
-        itemsCarrito.innerHTML = "";
-        carrito.forEach((producto, index) => {
-            const item = document.createElement("div");
-            item.className = "d-flex justify-content-between align-items-center p-2 border-bottom";
-            item.innerHTML = `
+    console.log("Datos del producto:", {
+      id: id,
+      nombre: nombre,
+      precio: precio,
+      cantidad: cantidad,
+    });
+
+    carrito.push({
+      id: id,
+      nombreProducto: nombre,
+      precioVenta: precio,
+      cantidad: cantidad,
+    });
+
+    actualizarCarrito();
+    alert("Producto agregado al carrito");
+  }
+
+  function actualizarCarrito() {
+    const itemsCarrito = document.getElementById("items-carrito");
+    const totalSpan = document.getElementById("total");
+    let total = 0;
+
+    itemsCarrito.innerHTML = "";
+    carrito.forEach((producto, index) => {
+      const item = document.createElement("div");
+      item.className =
+        "d-flex justify-content-between align-items-center p-2 border-bottom";
+      item.innerHTML = `
                 <div class="small">
                     <div class="fw-bold">${producto.nombreProducto}</div>
                     <div class="text-muted">
@@ -179,100 +235,100 @@
                     <svg width="14" height="14"><use xlink:href="#trash"></use></svg>
                 </button>
             `;
-            itemsCarrito.appendChild(item);
-            total += producto.precioVenta * producto.cantidad;
-        });
+      itemsCarrito.appendChild(item);
+      total += producto.precioVenta * producto.cantidad;
+    });
 
-        totalSpan.textContent = total.toFixed(2);
-    }
+    totalSpan.textContent = total.toFixed(2);
+  }
 
-    function eliminarDelCarrito(index) {
-        carrito.splice(index, 1);
-        actualizarCarrito();
-    }
+  function eliminarDelCarrito(index) {
+    carrito.splice(index, 1);
+    actualizarCarrito();
+  }
 
-    document.querySelector('.btn-finalizar').addEventListener('click', function() {
-        if (carrito.length === 0) {
-            alert('El carrito está vacío');
-            return;
-        }
-        
-        fetch('/finalizar-venta/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({
-                productos: carrito
-            })
+  document
+    .querySelector(".btn-finalizar")
+    .addEventListener("click", function () {
+      if (carrito.length === 0) {
+        alert("El carrito está vacío");
+        return;
+      }
+
+      const metodoPago = document.getElementById("metodoPago").value;
+
+      fetch("/inventario/finalizar-venta/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({
+          productos: carrito,
+          metodoPago: metodoPago,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            alert("Venta realizada con éxito");
+            carrito = [];
+            actualizarCarrito();
+            window.location.href = "/historial/";
+          } else {
+            alert(data.error || "Error al procesar la venta");
+          }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert('Venta realizada con éxito');
-                carrito = [];
-                actualizarCarrito();
-                window.location.href = '/historial/';
-            } else {
-                throw new Error(data.error || 'Error al procesar la venta');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error al procesar la venta: ' + error.message);
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error al procesar la venta: " + error.message);
         });
     });
 
-    // Función para obtener el token CSRF
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
+  // Función para obtener el token CSRF
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
-        return cookieValue;
+      }
     }
+    return cookieValue;
+  }
 
-    // Inicializar los controles de cantidad
-    function initProductQty() {
-        document.querySelectorAll('.product-qty').forEach(function(productQty) {
-            const plusButton = productQty.querySelector('.quantity-right-plus');
-            const minusButton = productQty.querySelector('.quantity-left-minus');
-            const input = productQty.querySelector('.input-number');
+  // Inicializar los controles de cantidad
+  function initProductQty() {
+    document.querySelectorAll(".product-qty").forEach(function (productQty) {
+      const plusButton = productQty.querySelector(".quantity-right-plus");
+      const minusButton = productQty.querySelector(".quantity-left-minus");
+      const input = productQty.querySelector(".input-number");
 
-            plusButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const currentVal = parseInt(input.value);
-                if (!isNaN(currentVal)) {
-                    input.value = currentVal + 1;
-                }
-            });
+      plusButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        const currentVal = parseInt(input.value);
+        if (!isNaN(currentVal)) {
+          input.value = currentVal + 1;
+        }
+      });
 
-            minusButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                const currentVal = parseInt(input.value);
-                if (!isNaN(currentVal) && currentVal > 1) {
-                    input.value = currentVal - 1;
-                }
-            });
-        });
-    }
-
-    // Inicializar cuando el documento esté listo
-    document.addEventListener('DOMContentLoaded', function() {
-        initProductQty();
+      minusButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        const currentVal = parseInt(input.value);
+        if (!isNaN(currentVal) && currentVal > 1) {
+          input.value = currentVal - 1;
+        }
+      });
     });
+  }
+
+  // Inicializar cuando el documento esté listo
+  document.addEventListener("DOMContentLoaded", function () {
+    initProductQty();
+  });
 </script>
 {% endblock %}

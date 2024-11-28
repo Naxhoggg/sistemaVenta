@@ -1,36 +1,126 @@
-{% extends 'inventario/base.html' %}
+{% extends 'inventario/base.html' %} {% block content %}
 
-{% block content %}
-    <h1>Sistema de Ventas</h1>
-    <div class="dashboard">
-        <div class="quick-actions">
-            <h2>Acciones Rápidas</h2>
-            <div class="action-buttons">
-                <a href="{% url 'inventario:registro_venta' %}" class="btn">Nueva Venta</a>
-                <a href="{% url 'inventario:lista_productos' %}" class="btn">Ver Productos</a>
-            </div>
-        </div>
-    </div>
-    <style>
-        .dashboard {
-            padding: 20px;
+<div class="dashboard">
+  <h1>Sistema de Ventas</h1>
+  
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm" class="mt-4">
+      <div class="mb-3">
+        <label for="loginEmail" class="form-label">Email:</label>
+        <input type="email" id="loginEmail" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label for="loginPassword" class="form-label">Contraseña:</label>
+        <input type="password" id="loginPassword" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+    </form>
+  </div>
+</div>
+
+<style>
+  .dashboard {
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .login-container {
+    background: #f5f5f5;
+    padding: 30px;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+  .btn {
+    background: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyC2Y7Z7FtJo_CZcW5bIZcPw2NqViSSocyew",
+    authDomain: "sistemaventa-django.firebaseapp.com",
+    projectId: "sistemaventa-django",
+    storageBucket: "sistemaventa-django.firebasestorage.app",
+    messagingSenderId: "754710008908",
+    appId: "1:754710008908:web:83a4b0492bf5162e6f50e9",
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    console.log("Intentando login con:", { email, password });
+
+    fetch("/inventario/iniciar-sesion/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify({
+        email: email,
+        contraseña: password,
+      }),
+    })
+      .then((response) => {
+        console.log("Respuesta recibida:", response.status);
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Datos de respuesta:", data);
+        if (data.success) {
+          console.log("Redirigiendo a:", data.redirect_url);
+          window.location.href = data.redirect_url;
+        } else {
+          throw new Error(data.error || "Error desconocido");
         }
-        .quick-actions {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 8px;
+      })
+      .catch((error) => {
+        console.error("Error detallado:", error);
+        alert("Error al iniciar sesión: " + error.message);
+      });
+  });
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .btn {
-            background: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-    </style>
+      }
+    }
+    return cookieValue;
+  }
+
+  function cerrarSesion() {
+    fetch("/inventario/cerrar-sesion/", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+    })
+      .then((response) => {
+        window.location.href = "/inventario/inicio/";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+</script>
+
+
 {% endblock %}

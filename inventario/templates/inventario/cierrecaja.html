@@ -20,6 +20,9 @@
                 <p>Efectivo: ${{ efectivo }}</p>
                 <p>Tarjeta: ${{ tarjeta }}</p>
             </div>
+            <div class="text-center mt-4">
+                <button id="btnCerrarCaja" class="btn btn-primary">Realizar Cierre de Caja</button>
+            </div>
         </div>
     </div>
     <style>
@@ -49,4 +52,45 @@
             border-top: 1px solid #ddd;
         }
     </style>
+    <script>
+    document.getElementById('btnCerrarCaja').addEventListener('click', function() {
+        if (confirm('¿Está seguro de realizar el cierre de caja?')) {
+            fetch('/cierre-caja/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cierre de caja realizado con éxito');
+                    window.location.reload();
+                } else {
+                    alert('Error al realizar el cierre: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al procesar el cierre de caja');
+            });
+        }
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    </script>
 {% endblock %}

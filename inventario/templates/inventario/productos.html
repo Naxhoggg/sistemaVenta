@@ -14,15 +14,15 @@
           <div class="col">
             <div class="product-item">
               <figure>
-                {% if producto.imagen %}
-                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombreProducto }}" class="img-fluid">
+                {% if producto.imagen_url %}
+                <img src="{{ producto.imagen_url }}" alt="{{ producto.nombreProducto }}" class="img-fluid">
                 {% else %}
                 <img src="{% static 'images/default-product.png' %}" alt="{{ producto.nombreProducto }}" class="img-fluid">
                 {% endif %}
               </figure>
               
               <h3>{{ producto.nombreProducto }}</h3>
-              <span class="qty">{{ producto.idCategoria }}</span>
+              <span class="qty">{{ producto.nombreCategoria }}</span>
               <span class="price">${{ producto.precioVenta }}</span>
               
               <div class="d-flex align-items-center justify-content-between">
